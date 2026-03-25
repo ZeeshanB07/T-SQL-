@@ -7,7 +7,7 @@ class Program
 {
     static void Main()
     {
-        string connectionString = "Server=LP-J81W6Q3\\SQLEXPRESS;Database=adventureWorks;Trusted_Connection=True;TrustServerCertificate=True;";
+        string connectionString = "Server=LP-L71W6Q3\\SQLEXPRESS;Database=adventureWorks;Trusted_Connection=True;TrustServerCertificate=True;";
 
         using (SqlConnection conn = new SqlConnection(connectionString))
         {
