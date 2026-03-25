@@ -1,0 +1,94 @@
+
+using System;
+using System.Data;
+using System.Data.SqlClient;
+
+class Program
+{
+    static void Main()
+    {
+        string connectionString = "Server=LP-J81W6Q3\\SQLEXPRESS;Database=adventureWorks;Trusted_Connection=True;TrustServerCertificate=True;";
+
+        using (SqlConnection conn = new SqlConnection(connectionString))
+        {
+            conn.Open();
+
+            Console.WriteLine("=== 1. Get All Products ===");
+            GetAllProducts(conn);
+
+            Console.WriteLine("\n=== 2. Get Products By Price ===");
+            GetProductsByPrice(conn, 1000);
+
+            Console.WriteLine("\n=== 3. Get Total Revenue ===");
+            GetTotalRevenue(conn);
+
+            Console.WriteLine("\n=== 4. Read from View ===");
+            GetCustomerOrders(conn);
+        }
+    }
+
+    // 1. Stored Procedure (No Params)
+    static void GetAllProducts(SqlConnection conn)
+    {
+        SqlCommand cmd = new SqlCommand("SalesLT.usp_GetAllProducts", conn);
+        cmd.CommandType = CommandType.StoredProcedure;
+
+        SqlDataReader reader = cmd.ExecuteReader();
+
+        while (reader.Read())
+        {
+            Console.WriteLine($"{reader["ProductID"]} - {reader["Name"]} - {reader["ListPrice"]}");
+        }
+
+        reader.Close();
+    }
+
+    // 2. Stored Procedure (With Parameter)
+    static void GetProductsByPrice(SqlConnection conn, decimal minPrice)
+    {
+        SqlCommand cmd = new SqlCommand("SalesLT.usp_GetProductsByPrice", conn);
+        cmd.CommandType = CommandType.StoredProcedure;
+
+        cmd.Parameters.AddWithValue("@MinPrice", minPrice);
+
+        SqlDataReader reader = cmd.ExecuteReader();
+
+        while (reader.Read())
+        {
+            Console.WriteLine($"{reader["Name"]} - {reader["ListPrice"]}");
+        }
+
+        reader.Close();
+    }
+
+    // 3. Output Parameter
+    static void GetTotalRevenue(SqlConnection conn)
+    {
+        SqlCommand cmd = new SqlCommand("SalesLT.usp_GetTotalRevenue", conn);
+        cmd.CommandType = CommandType.StoredProcedure;
+
+        SqlParameter outputParam = new SqlParameter("@TotalRevenue", SqlDbType.Money);
+        outputParam.Direction = ParameterDirection.Output;
+
+        cmd.Parameters.Add(outputParam);
+
+        cmd.ExecuteNonQuery();
+
+        Console.WriteLine("Total Revenue: " + outputParam.Value);
+    }
+
+    // 4. View Query
+    static void GetCustomerOrders(SqlConnection conn)
+    {
+        SqlCommand cmd = new SqlCommand("SELECT TOP 5 * FROM SalesLT.vw_CustomerOrderDetails", conn);
+
+        SqlDataReader reader = cmd.ExecuteReader();
+
+        while (reader.Read())
+        {
+            Console.WriteLine($"{reader["FirstName"]} {reader["LastName"]} - {reader["TotalDue"]}");
+        }
+
+        reader.Close();
+    }
+}
