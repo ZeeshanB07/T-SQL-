@@ -11,3 +11,6 @@ VS code You can install it via Microsoft Store
 .Net SDK  link : https://dotnet.microsoft.com/en-us/download
 
 AdventureWorks Database : https://microsoftlearning.github.io/dp-080-Transact-SQL/Scripts/adventureworkslt.sql
+
+Just Provide your Server Name Rest All reamin the same :: 
+      string connectionString = "Server=LP-WRTHY\\SQLEXPRESS;Database=adventureWorks;Trusted_Connection=True;TrustServerCertificate=True;";
