@@ -273,7 +273,12 @@ Expected Outcome
 **it reacts automatically without manual queries**
 
 
+**Create a trigger:**
 
+When new product is added
+If price < 0 → block it”
+
+(Hint: use INSTEAD OF INSERT)
 
 
 
